@@ -29,6 +29,34 @@ services:
     volumes:
       - mongo-data:/data/db
 
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    container_name: backend
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./backend/backend.env
+    depends_on:
+      - mongodb
+      - minio
+
+      
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/frontend.env
+    volumes:
+      - ./frontend:/usr/src/app
+    depends_on:
+      - backend
+
 volumes:
   minio-data:
   mongo-data:
